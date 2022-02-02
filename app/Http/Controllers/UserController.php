@@ -23,11 +23,12 @@ class UserController extends Controller
             Auth::login($user);
             return redirect('/');
         }
-        return back()->with("message", "Incorrect Creditials");
+        return back()->with("message", "Incorrect Credentials");
 
     }
 
-    public function store(Request $request){
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
+    {
         $request->validate(User::$rules);
         $data = [
             "name" => $request->name,
@@ -35,6 +36,12 @@ class UserController extends Controller
             "password" => Hash::make($request->password)
         ];
         User::create($data);
-        return back()->with("message", "Sucessfully Registered");
+        return back()->with("message", "Successfully Registered");
+    }
+
+    public function logout(): \Illuminate\Http\RedirectResponse
+    {
+        session()->flush();
+        return back();
     }
 }
