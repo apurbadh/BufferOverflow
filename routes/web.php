@@ -24,8 +24,9 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware('auth')->group(function (){
-    Route::get('', [PostController::class, 'home']);
-    Route::get('post/create', [PostController::class, 'create']);
+    Route::post('logout', [UserController::class, 'logout'])->name('logout');
+    Route::get('', [PostController::class, 'home'])->name('home');
+    Route::get('post/create', [PostController::class, 'create'])->name('post.create');
     Route::post('post/create', [PostController::class, 'store']);
     Route::get('post/{id}', [PostController::class, 'show']);
     Route::post('post/{id}', [CommentController::class, 'create']);

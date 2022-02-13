@@ -41,7 +41,7 @@ class UserController extends Controller
 
     public function logout(): \Illuminate\Http\RedirectResponse
     {
-        session()->flush();
-        return back();
+        Auth::logout();
+        return redirect('/login');
     }
 }

@@ -11,11 +11,13 @@ class PostController extends Controller
 
     public function home()
     {
-        return view('home');
+        $posts = Post::paginate(5);
+        return view('home', compact('posts'));
     }
 
-    public function show(Post $post)
+    public function show($id)
     {
+        $post = Post::find($id);
         return view('post.post', compact('post'));
     }
 
@@ -32,13 +34,18 @@ class PostController extends Controller
         return back()->with('message', 'Post Created Successfully !');
     }
 
-    public function edit(Post $post)
+    public function edit($id)
     {
+        $post = Post::find($id);
+        if ($post->user->id != auth()->id()){
+            return back();
+        }
         return view('post.edit', compact('post'));
     }
 
-    public function update(Post $post, Request $request): \Illuminate\Http\RedirectResponse
+    public function update($id, Request $request): \Illuminate\Http\RedirectResponse
     {
+        $post = Post::find($id);
         $data = $request->validate([
             'title' => 'required|unique:posts,title,'.$post->id,
             'code' => 'required'
@@ -47,8 +54,9 @@ class PostController extends Controller
         return back()->with('message', 'Updated Successfully !');
     }
 
-    public function delete(Post $post)
+    public function delete($id)
     {
+        $post = Post::find($id);
         $post->delete();
         return redirect('/')->with('message', 'Deleted Successfully !');
     }
